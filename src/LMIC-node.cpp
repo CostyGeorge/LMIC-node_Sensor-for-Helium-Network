@@ -57,16 +57,30 @@
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▄ █▀▀ █ █  █  █ █
 //  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀   ▀▀  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀
 
+#include <CayenneLPP.h>
+#include <DHT.h>
+#include <DS18B20.h>
 
-const uint8_t payloadBufferLength = 4;    // Adjust to fit max payload length
+//const uint8_t payloadBufferLength = 4;    // Adjust to fit max payload length
+#define DHTPIN 4
+#define DHTTYPE DHT22
+#define FLOWPIN 2
+#define TANKPIN 13
 
+volatile int flowrate;
+
+DS18B20 ds(0);
+
+DHT dht(DHTPIN, DHTTYPE);
+
+CayenneLPP lpp(21);
 
 //  █ █ █▀▀ █▀▀ █▀▄   █▀▀ █▀█ █▀▄ █▀▀   █▀▀ █▀█ █▀▄
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▀ █ █ █ █
 //  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀   ▀▀▀ ▀ ▀ ▀▀ 
 
 
-uint8_t payloadBuffer[payloadBufferLength];
+//uint8_t payloadBuffer[payloadBufferLength];
 static osjob_t doWorkJob;
 uint32_t doWorkIntervalSeconds = DO_WORK_INTERVAL_SECONDS;  // Change value in platformio.ini
 
@@ -470,7 +484,7 @@ void printHeader(void)
 #endif //ABP_ACTIVATION
 
 
-void initLmic(bit_t adrEnabled = 1,
+void initLmic(bit_t adrEnabled = 0,
               dr_t abpDataRate = DefaultABPDataRate, 
               s1_t abpTxPower = DefaultABPTxPower) 
 {
@@ -489,6 +503,10 @@ void initLmic(bit_t adrEnabled = 1,
     // Should be turned off if the device is not stationary (mobile).
     // 1 is on, 0 is off.
     LMIC_setAdrMode(adrEnabled);
+
+    LMIC.dn2Dr = DR_SF9;
+    LMIC_setDrTxpow(DR_SF7, 14);
+
 
     if (activationMode == ActivationMode::OTAA)
     {
@@ -690,22 +708,10 @@ lmic_tx_error_t scheduleUplink(uint8_t fPort, uint8_t* data, uint8_t dataLength,
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▄ █▀▀ █ █  █  █ █
 //  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀   ▀▀  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀
 
-
-static volatile uint16_t counter_ = 0;
-
-uint16_t getCounterValue()
+void flow()
 {
-    // Increments counter and returns the new value.
-    delay(50);         // Fake this takes some time
-    return ++counter_;
+    flowrate++;
 }
-
-void resetCounter()
-{
-    // Reset counter to 0
-    counter_ = 0;
-}
-
 
 void processWork(ostime_t doWorkJobTimeStamp)
 {
@@ -726,7 +732,20 @@ void processWork(ostime_t doWorkJobTimeStamp)
         // The counter is increased automatically by getCounterValue()
         // and can be reset with a 'reset counter' command downlink message.
 
-        uint16_t counterValue = getCounterValue();
+        Serial.print("DHT22 - \t");
+        float temp = dht.readTemperature();
+        float humi = dht.readHumidity();
+        Serial.println(" OK,\t");
+
+        float water = ds.getTempC();
+
+        flowrate = 0;
+        interrupts();
+        delay(1000);
+        noInterrupts();
+        
+        uint8_t tank = digitalRead(TANKPIN);
+
         ostime_t timestamp = os_getTime();
 
         #ifdef USE_DISPLAY
@@ -738,14 +757,12 @@ void processWork(ostime_t doWorkJobTimeStamp)
             display.print("I:");
             display.print(doWorkIntervalSeconds);
             display.print("s");        
-            display.print(" Ctr:");
-            display.print(counterValue);
+            display.print(" W:");
+            display.print(water);
         #endif
         #ifdef USE_SERIAL
             printEvent(timestamp, "Input data collected", PrintTarget::Serial);
             printSpaces(serial, MESSAGE_INDENT);
-            serial.print(F("COUNTER value: "));
-            serial.println(counterValue);
         #endif    
 
         // For simplicity LMIC-node will try to send an uplink
@@ -766,11 +783,27 @@ void processWork(ostime_t doWorkJobTimeStamp)
         {
             // Prepare uplink payload.
             uint8_t fPort = 10;
-            payloadBuffer[0] = counterValue >> 8;
-            payloadBuffer[1] = counterValue & 0xFF;
-            uint8_t payloadLength = 2;
 
-            scheduleUplink(fPort, payloadBuffer, payloadLength);
+            Serial.print(temp);
+            Serial.println(F(" ºC air temperature DHT22"));
+            Serial.print(humi);
+            Serial.println(F(" percent humidity DHT22"));
+            Serial.print(water);
+            Serial.println(F(" ºC water temperature DS18B20"));
+            Serial.print(flowrate);
+            Serial.println(F(" Flowrate"));
+            Serial.print(tank);
+            Serial.println(F(" Tank Sensor"));
+
+            lpp.reset();
+            lpp.addTemperature(1, temp);
+            lpp.addRelativeHumidity(2, humi);
+            lpp.addTemperature(3, water);
+            lpp.addDigitalInput(4, flowrate);
+            lpp.addDigitalInput(5, tank);
+            uint8_t payloadLength = (lpp.getSize());
+            uint8_t* payloadbuffer = (lpp.getBuffer());
+            scheduleUplink(fPort, payloadbuffer, payloadLength);
         }
     }
 }    
@@ -795,7 +828,7 @@ void processDownlink(ostime_t txCompleteTimestamp, uint8_t fPort, uint8_t* data,
             serial.println(F("Reset cmd received"));
         #endif
         ostime_t timestamp = os_getTime();
-        resetCounter();
+  //      resetCounter();
         printEvent(timestamp, "Counter reset", PrintTarget::All, false);
     }          
 }
@@ -847,7 +880,13 @@ void setup()
 
     // Place code for initializing sensors etc. here.
 
-    resetCounter();
+    dht.begin();
+    Serial.println("DHT Begin...");
+
+    pinMode(FLOWPIN, INPUT);
+    attachInterrupt(FLOWPIN, flow, RISING);
+
+    pinMode(TANKPIN, INPUT);
 
 //  █ █ █▀▀ █▀▀ █▀▄   █▀▀ █▀█ █▀▄ █▀▀   █▀▀ █▀█ █▀▄
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▀ █ █ █ █
