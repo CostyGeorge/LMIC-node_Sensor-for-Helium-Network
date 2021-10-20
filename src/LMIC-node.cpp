@@ -57,16 +57,18 @@
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▄ █▀▀ █ █  █  █ █
 //  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀   ▀▀  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀
 
+// Include libraries
 #include <CayenneLPP.h>
 #include <DHT.h>
 #include <DS18B20.h>
 
-//const uint8_t payloadBufferLength = 4;    // Adjust to fit max payload length
+// Pin definitions
 #define DHTPIN 4
 #define DHTTYPE DHT22
 #define FLOWPIN 2
 #define TANKPIN 13
 
+// Variable definitions
 volatile int flowrate;
 
 DS18B20 ds(0);
@@ -710,6 +712,7 @@ lmic_tx_error_t scheduleUplink(uint8_t fPort, uint8_t* data, uint8_t dataLength,
 
 void flow()
 {
+    // This function is called when the Flow Meter triggers an interrupt
     flowrate++;
 }
 
@@ -732,18 +735,22 @@ void processWork(ostime_t doWorkJobTimeStamp)
         // The counter is increased automatically by getCounterValue()
         // and can be reset with a 'reset counter' command downlink message.
 
+        // Read data from DHT22 sensor
         Serial.print("DHT22 - \t");
         float temp = dht.readTemperature();
         float humi = dht.readHumidity();
         Serial.println(" OK,\t");
 
+        // Read data from DS18B20 Sensor
         float water = ds.getTempC();
 
+        // Read data from Flow meter. Count interrupt events in one second
         flowrate = 0;
         interrupts();
         delay(1000);
         noInterrupts();
         
+        // Read input from Float Sensor
         uint8_t tank = digitalRead(TANKPIN);
 
         ostime_t timestamp = os_getTime();
@@ -784,6 +791,7 @@ void processWork(ostime_t doWorkJobTimeStamp)
             // Prepare uplink payload.
             uint8_t fPort = 10;
 
+            // Print serial debug data
             Serial.print(temp);
             Serial.println(F(" ºC air temperature DHT22"));
             Serial.print(humi);
@@ -795,6 +803,7 @@ void processWork(ostime_t doWorkJobTimeStamp)
             Serial.print(tank);
             Serial.println(F(" Tank Sensor"));
 
+            // Create the CayennaLPP packet
             lpp.reset();
             lpp.addTemperature(1, temp);
             lpp.addRelativeHumidity(2, humi);
@@ -880,12 +889,15 @@ void setup()
 
     // Place code for initializing sensors etc. here.
 
+    // Initialize DHT22 sensor
     dht.begin();
     Serial.println("DHT Begin...");
 
+    // Initialize Flow meter
     pinMode(FLOWPIN, INPUT);
     attachInterrupt(FLOWPIN, flow, RISING);
 
+    // Initialize Float sensor
     pinMode(TANKPIN, INPUT);
 
 //  █ █ █▀▀ █▀▀ █▀▄   █▀▀ █▀█ █▀▄ █▀▀   █▀▀ █▀█ █▀▄
