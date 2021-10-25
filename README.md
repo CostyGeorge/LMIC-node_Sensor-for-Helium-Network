@@ -67,11 +67,11 @@ This is a branch of the LMIC-node project from lnlp. It is an excellent baseline
 
 Open the file keyfiles/lorawan-keys.h. Enter the key info.
 
-*	OTAA_DEVEUI – Enter the Dev EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.**
+*	**OTAA_DEVEUI** – Enter the Dev EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.**
 
-*	OTAA_APPEUI – Enter the App EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is 1F. Here, you enter the first byte pair as 0x1F and the last byte pair as 0x60.**
+*	**OTAA_APPEUI** – Enter the App EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is 1F. Here, you enter the first byte pair as 0x1F and the last byte pair as 0x60.**
 
-*	OTAA_APPKEY – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. **Remember to keep this key private… don’t upload this file to a github repo.**
+*	**OTAA_APPKEY** – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. **Remember to keep this key private… don’t upload this file to a github repo.**
 
 <img src="images/pio5.png" width="640">
 
