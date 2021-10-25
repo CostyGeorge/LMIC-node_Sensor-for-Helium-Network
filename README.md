@@ -67,7 +67,7 @@ This is a branch of the LMIC-node project from lnlp. It is an excellent baseline
 
 ### Enter The Keys
 
-Open the file keyfiles/lorawan-keys.h. Enter the key info.
+Open the file `keyfiles/lorawan-keys.h`. Enter the key info.
 
 *	**OTAA_DEVEUI** – Enter the Dev EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.**
 
