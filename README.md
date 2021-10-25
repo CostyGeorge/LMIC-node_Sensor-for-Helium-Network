@@ -32,7 +32,7 @@ I have shown the App Key here because this is a demo device and it’s helpful t
 The script we will be using employs the CayenneLPP payload packet format. This is a very common payload format for IOT and most platforms will understand it out of the box.
 
 <img src="images/console2_edited.png" width="640">
-  
+
 ### Create an Integration
 
 There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here. 
@@ -51,20 +51,23 @@ You can connect the output of the function to as many integrations as you want i
 
 <img src="images/console4.png" width="640">
  
-Configure Your Device
+## Configure Your Device
 
 Start up Visual Studio Code/PlatformIO. Open/Clone the repo here.
-https://github.com/Chiumanfu/LMIC-node
+[https://github.com/Chiumanfu/LMIC-node](https://github.com/Chiumanfu/LMIC-node)
 
-This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented. https://github.com/lnlp/LMIC-node
+This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented.
+[https://github.com/lnlp/LMIC-node](https://github.com/lnlp/LMIC-node)
 
 Open the file keyfiles/lorawan-keys.h. Enter the key info.
 
-•	OTAA_DEVEUI – Enter the Dev EUI from the Helium Console. Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.
+*	OTAA_DEVEUI – Enter the Dev EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.**
 
-•	OTAA_APPEUI – Enter the App EUI from the Helium Console. Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is 1F. Here, you enter the first byte pair as 0x1F and the last byte pair as 0x60.
+*	OTAA_APPEUI – Enter the App EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is 1F. Here, you enter the first byte pair as 0x1F and the last byte pair as 0x60.**
 
-•	OTAA_APPKEY – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. Remember to keep this key private… don’t upload this file to a github repo.
+*	OTAA_APPKEY – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. **Remember to keep this key private… don’t upload this file to a github repo.**
+
+<img src="images/pio.png" width="640">
 
 
 ----------------------------------------------------------
