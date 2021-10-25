@@ -27,6 +27,8 @@ I have shown the App Key here because this is a demo device and it’s helpful t
 
 ![Console Device Setup](images/console1_edited.png)
 
+<img src="images/console1_edited.png" width="640">
+
 ### Create a CayenneLPP function. 
 
 The script we will be using employs the CayenneLPP payload packet format. This is a very common payload format for IOT and most platforms will understand it out of the box.
