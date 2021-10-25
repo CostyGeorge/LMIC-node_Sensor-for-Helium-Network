@@ -41,9 +41,13 @@ There are many different IOT platforms to publish your data to. The Helium team 
 <img src="images/console3.png" width="640">
 
 I have tried many of the integrations and here are my findings.
+
 *	**AdafruitIO** – Easily the best looking and very simple to setup but my use case requires email alerts for pump failure and Adafruit requires upgrading to paid tier for that.
+
 *	**myDevices Cayenne** – Simple to setup but not as many visualization options. I didn’t like the overall look.
+
 *	**Datacake** – Flexible and very nice layouts. More involved setup but very powerful. Data retention for free tier is only a week.
+
 *	**TagoIO** – My favorite due to it’s flexibility and variety of visualizations. Data retention is 1 month for the free tier and email/SMS are included.
 
 Under the Flows menu. Drag connections from the Sensor to the Function and Function to Integration. 
@@ -68,6 +72,18 @@ Open the file keyfiles/lorawan-keys.h. Enter the key info.
 *	OTAA_APPKEY – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. **Remember to keep this key private… don’t upload this file to a github repo.**
 
 <img src="images/pio.png" width="640">
+
+Open the file `platformio.ini`. Enter the environment variables.
+
+*	default_envs – enter the board if you are using different hardware.
+
+*	DO_WORK_INTERVAL_SECONDS – how often do you want to send a packet?
+
+<img src="images/pio4.png" width="640">
+
+That’s all the changes required to get a working sample. You can customize the rest of the code for adding/removing specific sensors. Refer to the blocks of code between the “User Code” flags.
+
+
 
 
 ----------------------------------------------------------
