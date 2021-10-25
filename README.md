@@ -35,7 +35,7 @@ The script we will be using employs the CayenneLPP payload packet format. This i
 
 ### Create an Integration
 
-There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here. 
+There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here.
 [https://docs.helium.com/use-the-network/console/integrations/](https://docs.helium.com/use-the-network/console/integrations/)
 
 <img src="images/console3.png" width="640">
