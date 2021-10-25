@@ -8,17 +8,61 @@ This guide is intended to provide a step by step guide to implement a basic DIY 
 * Water Tank Level
 
 The following skills are assumed.
-- Basic electronics hookup.
-- Basic PlatformIO familiarity. There are lots of videos on how to get started with PlatformIO.
+* Basic electronics hookup.
+* Basic PlatformIO familiarity. There are lots of videos on how to get started with PlatformIO.
 
 ## The Hardware
 
 The DIY board that I chose for this project is the TTGO T-Beam v1.1. This board is based on the ESP32 and has all the hardware necessities for most common sensor requirements.
-http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1317&FId=t3:50060:3
+[TTGO T-Beam](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1317&FId=t3:50060:3)
 
 The following is the hookup schematic diagram for this project. I used a perfboard to build the circuit but any method will work fine. Details on how to hookup the electronics is out of scope of this document.
 
 ![schematic](images/tbeam.bmp?raw=true)
+
+## Setup Console
+
+Sign up for a console account. Go to Devices then Add New Device. Make note of the Dev EUI, App EUI and App Key. Click Save Device. 
+I have shown the App Key here because this is a demo device and it’s helpful to see the byte order in a future step, but it is important to not share your key publicly.
+
+![Console Device Setup](images/console1_edited.png)
+
+### Create a CayenneLPP function. 
+
+The script we will be using employs the CayenneLPP payload packet format. This is a very common payload format for IOT and most platforms will understand it out of the box.
+
+![
+  
+Create an Integration
+
+There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here. 
+https://docs.helium.com/use-the-network/console/integrations/
+
+ 
+
+I have tried many of the integrations and here are my findings.
+•	AdafruitIO – Easily the best looking and very simple to setup but my use case requires email alerts for pump failure and Adafruit requires upgrading to paid tier for that.
+•	myDevices Cayenne – Simple to setup but not as many visualization options. I didn’t like the overall look.
+•	Datacake – Flexible and very nice layouts. More involved setup but very powerful. Data retention for free tier is only a week.
+•	TagoIO – My favorite due to it’s flexibility and variety of visualizations. Data retention is 1 month for the free tier and email/SMS are included.
+
+Under the Flows menu. Drag connections from the Sensor to the Function and Function to Integration. You can connect the output of the function to as many integrations as you want if you would like to try many different IOT platforms in parallel.
+
+ 
+Configure Your Device
+
+Start up Visual Studio Code/PlatformIO. Open/Clone the repo here.
+https://github.com/Chiumanfu/LMIC-node
+
+This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented. https://github.com/lnlp/LMIC-node
+
+Open the file keyfiles/lorawan-keys.h. Enter the key info.
+
+•	OTAA_DEVEUI – Enter the Dev EUI from the Helium Console. Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.
+
+•	OTAA_APPEUI – Enter the App EUI from the Helium Console. Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is 1F. Here, you enter the first byte pair as 0x1F and the last byte pair as 0x60.
+
+•	OTAA_APPKEY – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. Remember to keep this key private… don’t upload this file to a github repo.
 
 
 ----------------------------------------------------------
