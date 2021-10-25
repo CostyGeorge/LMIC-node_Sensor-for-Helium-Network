@@ -79,9 +79,9 @@ Open the file keyfiles/lorawan-keys.h. Enter the key info.
 
 Open the file `platformio.ini`. Enter the environment variables.
 
-*	default_envs – enter the board if you are using different hardware.
+*	**default_envs** – enter the board if you are using different hardware.
 
-*	DO_WORK_INTERVAL_SECONDS – how often do you want to send a packet?
+*	**DO_WORK_INTERVAL_SECONDS** – how often do you want to send a packet?
 
 <img src="images/pio4.png" width="640">
 
