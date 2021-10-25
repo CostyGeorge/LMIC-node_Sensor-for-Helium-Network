@@ -25,31 +25,31 @@ The following is the hookup schematic diagram for this project. I used a perfboa
 Sign up for a console account. Go to Devices then Add New Device. Make note of the Dev EUI, App EUI and App Key. Click Save Device. 
 I have shown the App Key here because this is a demo device and it’s helpful to see the byte order in a future step, but it is important to not share your key publicly.
 
-![Console Device Setup](images/console1_edited.png)
-
 <img src="images/console1_edited.png" width="640">
 
 ### Create a CayenneLPP function. 
 
 The script we will be using employs the CayenneLPP payload packet format. This is a very common payload format for IOT and most platforms will understand it out of the box.
 
-![
+<img src="images/console2_edited.png" width="640">
   
-Create an Integration
+### Create an Integration
 
 There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here. 
 https://docs.helium.com/use-the-network/console/integrations/
 
- 
+<img src="images/console3.png" width="640">
 
 I have tried many of the integrations and here are my findings.
-•	AdafruitIO – Easily the best looking and very simple to setup but my use case requires email alerts for pump failure and Adafruit requires upgrading to paid tier for that.
-•	myDevices Cayenne – Simple to setup but not as many visualization options. I didn’t like the overall look.
-•	Datacake – Flexible and very nice layouts. More involved setup but very powerful. Data retention for free tier is only a week.
-•	TagoIO – My favorite due to it’s flexibility and variety of visualizations. Data retention is 1 month for the free tier and email/SMS are included.
+*	AdafruitIO – Easily the best looking and very simple to setup but my use case requires email alerts for pump failure and Adafruit requires upgrading to paid tier for that.
+*	myDevices Cayenne – Simple to setup but not as many visualization options. I didn’t like the overall look.
+*	Datacake – Flexible and very nice layouts. More involved setup but very powerful. Data retention for free tier is only a week.
+*	TagoIO – My favorite due to it’s flexibility and variety of visualizations. Data retention is 1 month for the free tier and email/SMS are included.
 
-Under the Flows menu. Drag connections from the Sensor to the Function and Function to Integration. You can connect the output of the function to as many integrations as you want if you would like to try many different IOT platforms in parallel.
+Under the Flows menu. Drag connections from the Sensor to the Function and Function to Integration. 
+You can connect the output of the function to as many integrations as you want if you would like to try many different IOT platforms in parallel.
 
+<img src="images/console4.png" width="640">
  
 Configure Your Device
 
