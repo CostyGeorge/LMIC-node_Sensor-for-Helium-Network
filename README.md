@@ -122,9 +122,13 @@ Create a new dashboard with the “+” beside dashboards then add a widget.
 
 <img src="images/tago6.png" width="640">
 
- 
+### Example Dashboard
 
+Have fun customizing the dashboard to your liking.
+<img src="images/dashboard.png" width="640">
 
+Here is the public link for my greenhouse sensor.
+[https://admin.tago.io/public/dashboard/616092da6ff4e200113b8d61/1ec960a6-351a-4b12-8847-1058b5e36394](https://admin.tago.io/public/dashboard/616092da6ff4e200113b8d61/1ec960a6-351a-4b12-8847-1058b5e36394)
 
 
 
@@ -142,7 +146,7 @@ https://docs.helium.com/use-the-network/console/
 
 
 
-https://admin.tago.io/public/dashboard/616092da6ff4e200113b8d61/1ec960a6-351a-4b12-8847-1058b5e36394
+
 
 
 
