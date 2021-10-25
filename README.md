@@ -18,7 +18,7 @@ http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1317&FId=t3:50060:3
 
 The following is the hookup schematic diagram for this project. I used a perfboard to build the circuit but any method will work fine. Details on how to hookup the electronics is out of scope of this document.
 
-[My image](username.github.com/repository/img/image.jpg)
+[schematic](chiumanfu.github.com/repository/img/tbeam.bmp)
 
 
 ----------------------------------------------------------
