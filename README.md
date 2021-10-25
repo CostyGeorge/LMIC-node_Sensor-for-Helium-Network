@@ -63,6 +63,8 @@ Start up Visual Studio Code/PlatformIO. Open/Clone the repo here.
 This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented. Scroll to the bottom of this readme for the original repo's info.
 [https://github.com/lnlp/LMIC-node](https://github.com/lnlp/LMIC-node)
 
+### Enter The Keys
+
 Open the file keyfiles/lorawan-keys.h. Enter the key info.
 
 *	OTAA_DEVEUI – Enter the Dev EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.**
@@ -71,7 +73,9 @@ Open the file keyfiles/lorawan-keys.h. Enter the key info.
 
 *	OTAA_APPKEY – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. **Remember to keep this key private… don’t upload this file to a github repo.**
 
-<img src="images/pio.png" width="640">
+<img src="images/pio1.png" width="640">
+
+### Customize The Settings
 
 Open the file `platformio.ini`. Enter the environment variables.
 
@@ -81,8 +85,64 @@ Open the file `platformio.ini`. Enter the environment variables.
 
 <img src="images/pio4.png" width="640">
 
+This section is where the payload is assembled. Make note of the sensor variables and their corresponding number for the Tago.io setup.
+
+<img src="images/pio???.png" width="640">
+
 That’s all the changes required to get a working sample. You can customize the rest of the code for adding/removing specific sensors. Refer to the blocks of code between the “User Code” flags.
 
+<img src="images/pio3.png" width="640">
+
+## Setup TagoIO
+
+Create an account and authorization as described in the integration guide.
+[https://docs.helium.com/use-the-network/console/integrations/tago](https://docs.helium.com/use-the-network/console/integrations/tago)
+
+### Add Device
+
+Click the Devices button, then Add Device in the top right corner. Search for a “Custom Helium” device.
+
+<img src="images/tago1.png" width="640">
+ 
+Name your device then enter the Device EUI that you noted earlier. If you forgot it, you can find the info from the devices menu in the Helium Console. Click “Create my Device”.
+
+<img src="images/tago2.png" width="640">
+
+### Create A Dashboard
+
+Create a new dashboard with the “+” beside dashboards then add a widget.
+
+<img src="images/tago3.png" width="640">
+
+<img src="images/tago4.png" width="640">
+
+<img src="images/tago5.png" width="640">
+
+### Create Alarms
+
+<img src="images/tago6.png" width="640">
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+https://docs.helium.com/use-the-network/console/
+
+
+
+
+
+
+https://admin.tago.io/public/dashboard/616092da6ff4e200113b8d61/1ec960a6-351a-4b12-8847-1058b5e36394
 
 
 
