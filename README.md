@@ -85,15 +85,15 @@ Open the file `platformio.ini`. Enter the environment variables.
 
 *	**DO_WORK_INTERVAL_SECONDS** – how often do you want to send a packet?
 
-<img src="images/pio4.png" width="640">
+<img src="images/pio4.png" width="800">
 
 This section is where the payload is assembled. Make note of the sensor variables and their corresponding number for the Tago.io setup.
 
-<img src="images/pio???.png" width="640">
+<img src="images/pio???.png" width="800">
 
 That’s all the changes required to get a working sample. You can customize the rest of the code for adding/removing specific sensors. Refer to the blocks of code between the “User Code” flags.
 
-<img src="images/pio3.png" width="640">
+<img src="images/pio3.png" width="800">
 
 ## Setup TagoIO
 
