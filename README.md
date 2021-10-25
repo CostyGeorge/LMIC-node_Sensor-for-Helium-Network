@@ -23,7 +23,7 @@ The following is the hookup schematic diagram for this project. I used a perfboa
 ## Setup Console
 
 Sign up for a console account. Go to Devices then Add New Device. Make note of the Dev EUI, App EUI and App Key. Click Save Device. 
-I have shown the App Key here because this is a demo device and it’s helpful to see the byte order in a future step, but it is important to not share your key publicly.
+I have shown the App Key here because this is a demo device and it’s helpful to see the byte order in a future step, but **it is important to not share your key publicly.**
 
 <img src="images/console1_edited.png" width="640">
 
