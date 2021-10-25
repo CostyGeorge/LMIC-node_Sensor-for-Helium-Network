@@ -1,11 +1,11 @@
 # Helium DIY Sensor Quickstart
 
 This guide is intended to provide a step by step guide to implement a basic DIY sensor on the Helium network. The example use case is an Aquaponics greenhouse which requires the following sensors.
-- Air temperature
-- Humidity
-- Water Temperature
-- Pump flow Meter
-- Water Tank Level
+* Air temperature
+* Humidity
+* Water Temperature
+* Pump flow Meter
+* Water Tank Level
 
 The following skills are assumed.
 - Basic electronics hookup.
