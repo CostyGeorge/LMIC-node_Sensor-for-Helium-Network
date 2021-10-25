@@ -75,7 +75,7 @@ Open the file keyfiles/lorawan-keys.h. Enter the key info.
 
 *	**OTAA_APPKEY** – Enter the App Key from the Helium Console. The byte order is the same as it appears in the Helium Console. **Remember to keep this key private… don’t upload this file to a github repo.**
 
-<img src="images/pio5.png" width="640">
+<img src="images/pio5.png" width="800">
 
 ### Customize The Settings
 
