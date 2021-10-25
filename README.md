@@ -50,6 +50,8 @@ I have tried many of the integrations and here are my findings.
 
 *	**TagoIO** – My favorite due to it’s flexibility and variety of visualizations. Data retention is 1 month for the free tier and email/SMS are included.
 
+### Link the Flows
+
 Under the Flows menu. Drag connections from the Sensor to the Function and Function to Integration. 
 You can connect the output of the function to as many integrations as you want if you would like to try many different IOT platforms in parallel.
 
