@@ -133,7 +133,7 @@ Note: You will have to wait for at least one packet to transfer before these dro
 
 <img src="images/tago4a.png" width="800">
 
-You should see your data pop up in the display. There are many options to customize colour and behaviour of the widget. For the purposes of this quickstart, I will not go into all the options avaialable.
+You should see your data pop up in the display. There are many options to customize colour and behaviour of the widget. For the purposes of this quickstart, I will not go into all the options available but I highly suggest you play with the settings and widget types to see what they all do.
 
 <img src="images/tago5.png" width="800">
 
