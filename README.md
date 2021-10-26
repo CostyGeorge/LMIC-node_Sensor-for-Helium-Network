@@ -28,7 +28,7 @@ The following is the hookup schematic diagram for this project. I used a perfboa
 
 Sign up for a console account. Every new account comes with 10,000 free data credits. Sending one packet an hour, you shouldn't need to buy more data credits for over a year.
 
-Go to `Devices` then `+` to add a new device. Enter a name for your device and make note of the Dev EUI, App EUI and App Key. Click Save Device. 
+Go to `Devices` then `+` to add a new device. Enter a name for your device and make note of the Dev EUI, App EUI and App Key. Click `Save Device`. 
 I have shown the App Key here because this is a demo device and it’s helpful to see the byte order in a future step, but **it is important to not share your key publicly.**
 
 <img src="images/console1_edited.png" width="800">
