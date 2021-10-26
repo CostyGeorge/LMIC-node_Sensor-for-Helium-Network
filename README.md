@@ -131,7 +131,7 @@ Create a new dashboard with the “+” beside dashboards then add a widget. Cho
 Open the `Data From` dropdown and choose your device. Under the `Variable` dropdown choose the variable that corresponds with the variable assigned in the payload packet. 
 Note: You will have to wait for at least one packet to transfer before these dropdown boxes will populate.
 
-<img src="images/tago4.png" width="800">
+<img src="images/tago4a.png" width="800">
 
 You should see your data pop up in the display. There are many options to customize colour and behaviour of the widget. For the purposes of this quickstart, I will not go into all the options avaialable.
 
