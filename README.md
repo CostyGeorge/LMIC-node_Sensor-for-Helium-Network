@@ -1,6 +1,6 @@
 # Helium DIY Sensor Quickstart
 
-This guide is intended to provide a step by step guide to implement a basic DIY sensor on the Helium network. The example use case is an Aquaponics greenhouse which requires the following sensors.
+This guide is intended to provide a step by step guide to implement a basic DIY sensor on the Helium network. The example use-case is an Aquaponics greenhouse which requires the following sensors.
 * Air temperature
 * Humidity
 * Water Temperature
@@ -11,36 +11,40 @@ The following skills are assumed.
 * Basic electronics hookup.
 * Basic PlatformIO familiarity. There are lots of videos on how to get started with PlatformIO.
 
+
 ## The Hardware
 
 The DIY board that I chose for this project is the TTGO T-Beam v1.1. This board is based on the ESP32 and has all the hardware necessities for most common sensor requirements.
 [TTGO T-Beam](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1317&FId=t3:50060:3)
 
-The code will work with many different dev boards, check the LMIC-node supported boards list if you have something other than the TTGO T-Beam.
+The code will work with many different dev boards, check the [LMIC-node Supported Boards list](#2-supported-boards) if you have something other than the TTGO T-Beam.
 
 The following is the hookup schematic diagram for this project. I used a perfboard to build the circuit but any method will work fine. Details on how to hookup the electronics is out of scope of this document.
 
 ![schematic](images/tbeam.bmp?raw=true)
 
+
 ## Setup Console
 
-Sign up for a console account. Go to Devices then Add New Device. Make note of the Dev EUI, App EUI and App Key. Click Save Device. 
+Sign up for a console account. Every new account comes with 10,000 free data credits. Sending one packet an hour, you shouldn't need to buy more data credits for over a year.
+
+Go to `Devices` then `+` to add a new device. Enter a name for your device and make note of the Dev EUI, App EUI and App Key. Click Save Device. 
 I have shown the App Key here because this is a demo device and it’s helpful to see the byte order in a future step, but **it is important to not share your key publicly.**
 
-<img src="images/console1_edited.png" width="640">
+<img src="images/console1_edited.png" width="800">
 
 ### Create a CayenneLPP function. 
 
-The script we will be using employs the CayenneLPP payload packet format. This is a very common payload format for IOT and most platforms will understand it out of the box.
+The script we will be using employs the CayenneLPP payload packet format. This is a very common payload format for IOT and most platforms will understand it out of the box. Click `Functions` then `+` to add a new function. Enter a name for your function. Function type is `Decoder`. Format is `CayenneLPP`. Click `Save Function`.
 
-<img src="images/console2_edited.png" width="640">
+<img src="images/console2_edited.png" width="800">
 
 ### Create an Integration
 
-There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here.
+There are many different IOT platforms to publish your data to. The Helium team has documented to process for many of them here. Follow the procedure for your chosen integration.
 [https://docs.helium.com/use-the-network/console/integrations/](https://docs.helium.com/use-the-network/console/integrations/)
 
-<img src="images/console3.png" width="640">
+<img src="images/console3.png" width="800">
 
 I have tried many of the integrations and here are my findings.
 
@@ -57,19 +61,25 @@ I have tried many of the integrations and here are my findings.
 Under the Flows menu. Drag connections from the Sensor to the Function and Function to Integration. 
 You can connect the output of the function to as many integrations as you want if you would like to try many different IOT platforms in parallel.
 
-<img src="images/console4.png" width="640">
+<img src="images/console4.png" width="800">
+
+### Customize Console
+
+Although not required, it will be useful to setup things like Multiple Packet and Adaptive Data Rate. Understanding the functions and features of the console will allow you to customize your sensor implementation. More details can be found here.
+[https://docs.helium.com/use-the-network/console/](https://docs.helium.com/use-the-network/console/)
+ 
  
 ## Configure Your Device
 
 Start up Visual Studio Code/PlatformIO. Open/Clone the repo here.
-[https://github.com/Chiumanfu/LMIC-node](https://github.com/Chiumanfu/LMIC-node)
+[https://github.com/Chiumanfu/LMIC-node_Helium-Sensor](https://github.com/Chiumanfu/LMIC-node_Helium-Sensor)
 
-This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented. Scroll to the bottom of this readme for the original repo's info.
+This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented. Here is the link to the original repo. I also kept the original repo readme intact at the end of this document.
 [https://github.com/lnlp/LMIC-node](https://github.com/lnlp/LMIC-node)
 
 ### Enter The Keys
 
-Open the file `keyfiles/lorawan-keys.h`. Enter the key info.
+Open the file `keyfiles/lorawan-keys.h`. Enter the key info from console.
 
 *	**OTAA_DEVEUI** – Enter the Dev EUI from the Helium Console. **Important note – The byte pairs are in reverse order. In the Helium console the first byte pair is 60 and the last is FB. Here, you enter the first byte pair as 0xFB and the last byte pair as 0x60.**
 
@@ -83,19 +93,17 @@ Open the file `keyfiles/lorawan-keys.h`. Enter the key info.
 
 Open the file `platformio.ini`. Enter the environment variables.
 
-*	**default_envs** – enter the board if you are using different hardware.
+*	**default_envs** – enter the board if you are using something other than the TTGO T-Beam v1.1.
 
-*	**DO_WORK_INTERVAL_SECONDS** – how often do you want to send a packet?
+*	**DO_WORK_INTERVAL_SECONDS** – how often do you want to send a packet? Default at 1 packet per hour.
 
 <img src="images/pio4.png" width="800">
 
-Open the `LMIC-node.cpp` file. This section is where the payload is assembled. Make note of the sensor variables and their corresponding number for the Tago.io setup.
+That’s all the changes required to get a working sample. You should open the `LMIC-node.cpp` file. This section is where the payload is assembled. Make note of the sensor variables and their corresponding number for the Tago.io setup.
 
 <img src="images/pio6.png" width="800">
 
-That’s all the changes required to get a working sample. 
-
-You can customize the rest of the code for adding/removing specific sensors. Refer to the blocks of code between the `User Code` flags.
+You can customize the rest of the code for adding/removing specific sensors. Refer to the blocks of code between the `USER CODE BEGIN` and `USER CODE END` flags. Generally each sensor will have code in three places. Declaration section, setup section, and the main loop.
 
 <img src="images/pio3.png" width="800">
 
@@ -108,53 +116,41 @@ Create an account and authorization as described in the integration guide.
 
 Click the Devices button, then Add Device in the top right corner. Search for a “Custom Helium” device.
 
-<img src="images/tago1.png" width="640">
+<img src="images/tago1.png" width="800">
  
-Name your device then enter the Device EUI that you noted earlier. If you forgot it, you can find the info from the devices menu in the Helium Console. Click “Create my Device”.
+Name your device then enter the Device EUI that you noted earlier in the same order as it appears in the Helium Console. If you forgot it, you can find the info from the devices menu in the Helium Console. Click “Create my Device”.
 
-<img src="images/tago2.png" width="640">
+<img src="images/tago2.png" width="800">
 
 ### Create A Dashboard
 
-Create a new dashboard with the “+” beside dashboards then add a widget.
+Create a new dashboard with the “+” beside dashboards then add a widget. Choose a `Display` widget.
 
-<img src="images/tago3.png" width="640">
+<img src="images/tago3.png" width="800">
 
-<img src="images/tago4.png" width="640">
+Open the `Data From` dropdown and choose your device. Under the `Variable` dropdown choose the variable that corresponds with the variable assigned in the payload packet. 
+Note: You will have to wait for at least one packet to transfer before these dropdown boxes will populate.
 
-<img src="images/tago5.png" width="640">
+<img src="images/tago4.png" width="800">
+
+You should see your data pop up in the display. There are many options to customize colour and behaviour of the widget. For the purposes of this quickstart, I will not go into all the options avaialable.
+
+<img src="images/tago5.png" width="800">
 
 ### Create Alarms
 
-<img src="images/tago6.png" width="640">
+Tago.io has a very capable Actions function which allows you to set alarms on email or SMS for pretty much anything you can think of. This alarm is configured to send an email when the water temperature exceeds 30 degrees or falls below 5 degrees.
+
+<img src="images/tago6.png" width="800">
 
 ### Example Dashboard
 
 Have fun customizing the dashboard to your liking.
+
 <img src="images/Dashboard.png" width="800">
 
 Here is the public link for my greenhouse sensor.
 [https://admin.tago.io/public/dashboard/616092da6ff4e200113b8d61/1ec960a6-351a-4b12-8847-1058b5e36394](https://admin.tago.io/public/dashboard/616092da6ff4e200113b8d61/1ec960a6-351a-4b12-8847-1058b5e36394)
-
-
-
-
-
-
-
-
-
-
-https://docs.helium.com/use-the-network/console/
-
-
-
-
-
-
-
-
-
 
 ----------------------------------------------------------
 
