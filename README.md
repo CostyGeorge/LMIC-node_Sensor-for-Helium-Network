@@ -99,7 +99,9 @@ Open the file `platformio.ini`. Enter the environment variables.
 
 <img src="images/pio4.png" width="800">
 
-That’s all the changes required to get a working sample. You should open the `LMIC-node.cpp` file. This section is where the payload is assembled. Make note of the sensor variables and their corresponding number for the Tago.io setup.
+That’s all the changes required to get a working sample. Compile and upload to your board.
+
+You should open the `LMIC-node.cpp` file. This section is where the payload is assembled. Make note of the sensor variables and their corresponding number for the Tago.io setup.
 
 <img src="images/pio6.png" width="800">
 
