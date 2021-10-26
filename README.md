@@ -72,7 +72,7 @@ Although not required, it will be useful to setup things like Multiple Packet an
 ## Configure Your Device
 
 Start up Visual Studio Code/PlatformIO. Open/Clone the repo here.
-[https://github.com/Chiumanfu/LMIC-node_Helium-Sensor](https://github.com/Chiumanfu/LMIC-node_Helium-Sensor)
+[https://github.com/Chiumanfu/LMIC-node_Sensor-for-Helium-Network](https://github.com/Chiumanfu/LMIC-node_Sensor-for-Helium-Network)
 
 This is a branch of the LMIC-node project from lnlp. It is an excellent baseline for a LORA sensor project. It’s clean, flexible and very well documented. Here is the link to the original repo. I also kept the original repo readme intact at the end of this document.
 [https://github.com/lnlp/LMIC-node](https://github.com/lnlp/LMIC-node)
