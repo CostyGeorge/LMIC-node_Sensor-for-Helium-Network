@@ -16,6 +16,8 @@ The following skills are assumed.
 The DIY board that I chose for this project is the TTGO T-Beam v1.1. This board is based on the ESP32 and has all the hardware necessities for most common sensor requirements.
 [TTGO T-Beam](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1317&FId=t3:50060:3)
 
+The LMIC-node code will work with many different dev boards, check the LMIC-node supported boards list if you have something other than the TTGO T-Beam.
+
 The following is the hookup schematic diagram for this project. I used a perfboard to build the circuit but any method will work fine. Details on how to hookup the electronics is out of scope of this document.
 
 ![schematic](images/tbeam.bmp?raw=true)
