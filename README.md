@@ -120,13 +120,13 @@ Click the Devices button, then Add Device in the top right corner. Search for a 
 
 <img src="images/tago1.png" width="800">
  
-Name your device then enter the Device EUI that you noted earlier in the same order as it appears in the Helium Console. If you forgot it, you can find the info from the devices menu in the Helium Console. Click “Create my Device”.
+Name your device then enter the Device EUI that you noted earlier in the same order as it appears in the Helium Console. If you forgot it, you can find the info from the devices menu in the Helium Console. Click `Create my Device`.
 
 <img src="images/tago2.png" width="800">
 
 ### Create A Dashboard
 
-Create a new dashboard with the “+” beside dashboards then add a widget. Choose a `Display` widget.
+Create a new dashboard with the `+` beside dashboards then add a widget. Choose a `Display` widget.
 
 <img src="images/tago3.png" width="800">
 
