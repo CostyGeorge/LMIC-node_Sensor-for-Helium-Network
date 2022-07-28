@@ -57,25 +57,41 @@
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▄ █▀▀ █ █  █  █ █
 //  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀   ▀▀  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀
 
-// Include libraries
+// Librăriile folosite
 #include <CayenneLPP.h>
 #include <DHT.h>
 #include <DS18B20.h>
+#include <NewPing.h>
 
-// Pin definitions
-#define DHTPIN 4
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+
+// Definirea pinilor
+#define VEXT_PIN 21
+#define DHTPIN 12
 #define DHTTYPE DHT22
-#define FLOWPIN 2
-#define TANKPIN 13
 
-// Variable definitions
-volatile int flowrate;
 
-DS18B20 ds(0);
+#define TRIGGER_PIN  2  // Pinul declanșator pentru senzorul ultrasonic.
+#define ECHO_PIN     15  // Pinul de ecou pentru senzorul ultrasonic.
+#define MAX_DISTANCE 300 // Distanta maxima pe care dorim sa o masuram (in centimetri).
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); //Funcția setup NewPing pentru pini si distanta maxima.
+
+
+
+DS18B20 ds(4);
 
 DHT dht(DHTPIN, DHTTYPE);
 
-CayenneLPP lpp(21);
+CayenneLPP lpp(30);
+
+double ReadVoltage(byte pin){
+  double reading = analogRead(pin); // Voltajul de referinta este 3.3v, deci valoarea maxima este pt  3.3v = 4095 in intervalul 0 to 4095
+     Serial.print(reading);
+     Serial.println(F(" Battery Voltage ADC"));
+    return -0.000000000000016 * pow(reading,4) + 0.000000000118171 * pow(reading,3)- 0.000000301211691 * pow(reading,2)+ 0.001109019271794 * reading + 0.034143524634089;
+} 
 
 //  █ █ █▀▀ █▀▀ █▀▄   █▀▀ █▀█ █▀▄ █▀▀   █▀▀ █▀█ █▀▄
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▀ █ █ █ █
@@ -710,19 +726,15 @@ lmic_tx_error_t scheduleUplink(uint8_t fPort, uint8_t* data, uint8_t dataLength,
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▄ █▀▀ █ █  █  █ █
 //  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀   ▀▀  ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀
 
-void flow()
-{
-    // This function is called when the Flow Meter triggers an interrupt
-    flowrate++;
-}
+
 
 void processWork(ostime_t doWorkJobTimeStamp)
 {
     // This function is called from the doWorkCallback() 
     // callback function when the doWork job is executed.
-
-    // Uses globals: payloadBuffer and LMIC data structure.
-
+    pinMode(VEXT_PIN, OUTPUT);
+    digitalWrite(VEXT_PIN, LOW);
+    delay(1000);
     // This is where the main work is performed like
     // reading sensor and GPS data and schedule uplink
     // messages if anything needs to be transmitted.
@@ -730,31 +742,62 @@ void processWork(ostime_t doWorkJobTimeStamp)
     // Skip processWork if using OTAA and still joining.
     if (LMIC.devaddr != 0)
     {
-        // Collect input data.
-        // For simplicity LMIC-node uses a counter to simulate a sensor. 
-        // The counter is increased automatically by getCounterValue()
-        // and can be reset with a 'reset counter' command downlink message.
-
-        // Read data from DHT22 sensor
+        // Colectarea datelor de la senzori.
+        
+        // Citirea datelor de la senzorul  DHT22
         Serial.print("DHT22 - \t");
-        float temp = dht.readTemperature();
+        float temp_aer = dht.readTemperature();
         float humi = dht.readHumidity();
         Serial.println(" OK,\t");
 
-        // Read data from DS18B20 Sensor
-        float water = ds.getTempC();
-
-        // Read data from Flow meter. Count interrupt events in one second
-        flowrate = 0;
-        interrupts();
-        delay(1000);
-        noInterrupts();
+        // Citirea datelor de la senzorul DS18B20
+        Serial.print(ds.getTempC());
+        Serial.println(F(" Temperatura apă"));
+        float temp_apa = ds.getTempC();
         
-        // Read input from Float Sensor
-        uint8_t tank = digitalRead(TANKPIN);
+        // Citirea datelor de la senzorul ultrasonic
+        int ok=0;
+        float sumdist=0,dist=0;
+        for (int i = 0; i <= 30; i++)
+        {   float x=sonar.ping_cm();
+            Serial.print(x);
+            Serial.println(F(" Distanța masurata"));
+            if (x>=31)
+            {
+                 sumdist=sumdist+x;
+                 ok++;
+            }
+            if (ok>=3)
+            {
+                break;
+            }
+            delay(150);   
+        }
+        if (ok>0)
+        {
+            dist=sumdist/ok;
+        }
+        else
+        {
+            dist=0;
+        }
 
+        float nivel_apa=49.3-dist; //calculul nivelului apei din rezervor
+        if(dist>49.3)
+         nivel_apa=0;
+
+        //calculul volumului folosind un polinom de gradul 4 cu valoarea nivelului ca data de intrare
+        float volum= (-0.00456 * pow(nivel_apa,4) + 0.40166 * pow(nivel_apa,3) - 9.39092 * pow(nivel_apa,2)+ 638.1823 * nivel_apa - 133.33385) * 0.001;
+        if(volum<0)
+         volum=0;
+
+        // Citirea datelor de la convertorul analog-numeric pentru aflarea voltajului
+        double voltaj =ReadVoltage(37)*3.306617;
+        
         ostime_t timestamp = os_getTime();
 
+       digitalWrite(VEXT_PIN, HIGH); //oprirea alimentarii senzorilor
+        
         #ifdef USE_DISPLAY
             // Interval and Counter values are combined on a single row.
             // This allows to keep the 3rd row empty which makes the
@@ -791,30 +834,38 @@ void processWork(ostime_t doWorkJobTimeStamp)
             // Prepare uplink payload.
             uint8_t fPort = 10;
 
-            // Print serial debug data
-            Serial.print(temp);
-            Serial.println(F(" ºC air temperature DHT22"));
+            // Afisarea datelor de la toți senzorii
+            Serial.print(temp_aer);
+            Serial.println(F(" ºC temperatură aer DHT22"));
             Serial.print(humi);
-            Serial.println(F(" percent humidity DHT22"));
-            Serial.print(water);
-            Serial.println(F(" ºC water temperature DS18B20"));
-            Serial.print(flowrate);
-            Serial.println(F(" Flowrate"));
-            Serial.print(tank);
-            Serial.println(F(" Tank Sensor"));
+            Serial.println(F(" percent umiditate DHT22"));
+            Serial.print(dist);
+            Serial.println(F(" Distanță"));
+            Serial.print(voltaj);
+            Serial.println(F(" Voltaj baterie"));
+            Serial.print(temp_apa);
+            Serial.println(F(" Temperatură apă"));
+            Serial.print(nivel_apa);
+            Serial.println(F(" Nivel apa"));
+            Serial.print(volum);
+            Serial.println(F(" Volum apa"));
+            
 
-            // Create the CayennaLPP packet
+            //Crearea pachetului CayenneLPP
             lpp.reset();
-            lpp.addTemperature(1, temp);
-            lpp.addRelativeHumidity(2, humi);
-            lpp.addTemperature(3, water);
-            lpp.addDigitalInput(4, flowrate);
-            lpp.addDigitalInput(5, tank);
+            lpp.addAnalogInput(0, temp_aer);
+            lpp.addRelativeHumidity(1, humi);
+            lpp.addAnalogInput(2, dist);
+            lpp.addAnalogInput(3, voltaj);
+            lpp.addAnalogInput(4, temp_apa);
+            lpp.addAnalogInput(5, nivel_apa);
+            lpp.addAnalogInput(6, volum);
             uint8_t payloadLength = (lpp.getSize());
             uint8_t* payloadbuffer = (lpp.getBuffer());
             scheduleUplink(fPort, payloadbuffer, payloadLength);
         }
     }
+    
 }    
  
 
@@ -849,7 +900,9 @@ void processDownlink(ostime_t txCompleteTimestamp, uint8_t fPort, uint8_t* data,
 
 
 void setup() 
-{
+{   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+    pinMode(VEXT_PIN, OUTPUT);
+    digitalWrite(VEXT_PIN, HIGH);
     // boardInit(InitType::Hardware) must be called at start of setup() before anything else.
     bool hardwareInitSucceeded = boardInit(InitType::Hardware);
 
@@ -889,16 +942,10 @@ void setup()
 
     // Place code for initializing sensors etc. here.
 
-    // Initialize DHT22 sensor
+    // Inițializare senzor DHT22
     dht.begin();
     Serial.println("DHT Begin...");
 
-    // Initialize Flow meter
-    pinMode(FLOWPIN, INPUT);
-    attachInterrupt(FLOWPIN, flow, RISING);
-
-    // Initialize Float sensor
-    pinMode(TANKPIN, INPUT);
 
 //  █ █ █▀▀ █▀▀ █▀▄   █▀▀ █▀█ █▀▄ █▀▀   █▀▀ █▀█ █▀▄
 //  █ █ ▀▀█ █▀▀ █▀▄   █   █ █ █ █ █▀▀   █▀▀ █ █ █ █
